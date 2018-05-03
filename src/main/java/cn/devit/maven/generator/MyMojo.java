@@ -1,19 +1,5 @@
-package cn.devit.maven.generator;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
-import java.util.regex.Pattern;
-
 /*
- * Copyright 2001-2005 
+ * Copyright 2017-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +13,18 @@ import java.util.regex.Pattern;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package cn.devit.maven.generator;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -37,7 +35,7 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * Goal which touches a timestamp file.
- *
+ * @author Alex Lei
  */
 @Mojo(name = "path", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, inheritByDefault = true)
 public class MyMojo extends AbstractMojo {

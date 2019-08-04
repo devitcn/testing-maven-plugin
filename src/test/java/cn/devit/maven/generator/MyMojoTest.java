@@ -27,8 +27,12 @@ public class MyMojoTest {
 
         System.out.println(str.toString());
 
+        //ignore hidden file
         assertThat(str, not(containsString(".keep")));
+        //escape
         assertThat(str, (containsString("_101")));
         assertThat(str, (containsString("sample_1")));
+        //unicode
+        assertThat(str, (containsString("汉字")));
     }
 }

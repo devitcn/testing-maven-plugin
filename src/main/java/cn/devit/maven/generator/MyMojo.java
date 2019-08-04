@@ -67,7 +67,7 @@ public class MyMojo extends AbstractMojo {
     /**
      * Location of the file.
      */
-    @Parameter(defaultValue = "${project.build.directory}/generated-sources/path")
+    @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/path")
     File outputDirectory;
 
     @Parameter(defaultValue = "${basedir}/src/test/resources")
@@ -76,7 +76,7 @@ public class MyMojo extends AbstractMojo {
     /**
      * Packages for generated resources.
      * <p>
-     * default will be first package found in src/test/java else project group
+     * Default will be ${project.groupdId}
      * id else default package
      * 
      */
@@ -150,16 +150,17 @@ public class MyMojo extends AbstractMojo {
 
     public String getPackageDir() {
         if (packages == null || packages.trim().isEmpty()) {
-            @SuppressWarnings("rawtypes")
-            List list = project.getTestCompileSourceRoots();
-            File testJava = new File((String) list.get(0));
-            if (testJava.exists()) {
-                String guess = firstFolderHasJava(testJava);
-                if (guess != null) {
-                    return guess;
-                }
-            }
             return project.getGroupId().replaceAll("\\.", "/");
+//            @SuppressWarnings("rawtypes")
+//            List list = project.getTestCompileSourceRoots();
+//            File testJava = new File((String) list.get(0));
+//            if (testJava.exists()) {
+//                String guess = firstFolderHasJava(testJava);
+//                if (guess != null) {
+//                    return guess;
+//                }
+//            }
+//            return project.getGroupId().replaceAll("\\.", "/");
         }
         return packages.replaceAll("\\.", "/");
     }

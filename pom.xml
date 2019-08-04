@@ -5,7 +5,7 @@
 
   <groupId>cn.devit.maven</groupId>
   <artifactId>testing-maven-plugin</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
@@ -19,7 +19,7 @@
   </licenses>
   <developers>
     <developer>
-      <name>Alex Lei</name>
+      <name>Xiaobao Lei</name>
       <email>lxbzmy@gmail.com</email>
     </developer>
   </developers>
@@ -148,6 +148,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -160,6 +161,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.1.0</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>

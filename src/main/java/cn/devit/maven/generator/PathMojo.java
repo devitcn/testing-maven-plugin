@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -38,7 +37,7 @@ import org.apache.maven.project.MavenProject;
  * @author Alex Lei
  */
 @Mojo(name = "path", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, inheritByDefault = true)
-public class MyMojo extends AbstractMojo {
+public class PathMojo extends AbstractMojo {
 
     private final class SimpleFileVisitorExtension
             extends SimpleFileVisitor<Path> {
@@ -201,10 +200,10 @@ public class MyMojo extends AbstractMojo {
                     if (attrs.isSymbolicLink()) {
                         return FileVisitResult.SKIP_SUBTREE;
                     }
-                    // System.out.println(dir);x
                     Path fileName = dir.getFileName();
                     int count = fileName.getNameCount();
-                    String p = root.relativize(dir).toString();
+                    String p = root.relativize(dir)
+                            .toString().replaceAll("\\\\", "/");
                     str.append("  public static class "
                             + fileNameToJava(fileName.toString()) + " {\n");
                     str.append("/**\n").append(" * " + p + "\n")

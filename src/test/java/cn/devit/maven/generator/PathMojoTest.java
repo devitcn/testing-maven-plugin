@@ -4,14 +4,15 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.junit.Test;
 
-public class MyMojoTest {
+public class PathMojoTest {
 
-    public MyMojo bean = new MyMojo();
+    public PathMojo bean = new PathMojo();
 
     @Test
     public void walk() throws Exception {
@@ -20,8 +21,11 @@ public class MyMojoTest {
         System.out.println(root);
         final Path start = Paths.get("src/it/simple-it/src/test/resources");
         System.out.println((root.relativize(start)));
-        
+
         System.out.println(root.resolve(start));
+        
+        Path wind = Paths.get("foo\\bar");
+        System.out.println(root.relativize(wind));
 
         final String str = bean.build(root, start).toString();
 

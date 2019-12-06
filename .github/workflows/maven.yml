@@ -3,7 +3,7 @@ name: Java CI
 on: [push]
 
 jobs:
-  build-w:
+  check-on-windows:
 
     runs-on: windows-latest
 
@@ -16,8 +16,8 @@ jobs:
     - name: Build with Maven
       run: mvn package
 
-  build-l:
-    runs-on: [linux]
+  check-on-ubuntu:
+    runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v1
         - name: Set up JDK 1.8

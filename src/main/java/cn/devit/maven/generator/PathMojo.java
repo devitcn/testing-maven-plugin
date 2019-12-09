@@ -16,8 +16,11 @@
 package cn.devit.maven.generator;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,6 +37,7 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * Goal which touches a timestamp file.
+ * 
  * @author Alex Lei
  */
 @Mojo(name = "path", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, inheritByDefault = true)
@@ -72,6 +76,9 @@ public class PathMojo extends AbstractMojo {
     @Parameter(defaultValue = "${basedir}/src/test/resources")
     File resourceDirectory;
 
+    @Parameter(defaultValue = "${project.build.sourceEncoding}")
+    String encoding;
+
     /**
      * Packages for generated resources.
      * <p>
@@ -104,14 +111,19 @@ public class PathMojo extends AbstractMojo {
         }
 
         File f = new File(packaged, "R.java");
-        this.getLog().info("Generating " + f.getPath());
-        FileWriter writer;
+        this.getLog().info("Generating " + f.getPath()+", encoding: "+encoding);
+        Writer writer;
         try {
-            writer = new FileWriter(f);
-            writer.write("package "+packageDir.replaceAll("/", ".")+";\n");
+            if (encoding != null) {
+                writer = new OutputStreamWriter(new FileOutputStream(f),
+                        encoding);
+            } else {
+                writer = new FileWriter(f);
+            }
+            writer.write("package " + packageDir.replaceAll("/", ".") + ";\n");
             writer.write(build.toString());
             writer.close();
-            
+
             project.addTestCompileSourceRoot(outputDirectory.getPath());
 
         } catch (IOException e) {
@@ -213,7 +225,7 @@ public class PathMojo extends AbstractMojo {
                     }
                     if (attrs.isRegularFile()) {
                         String p = root.relativize(file)
-                            .toString().replaceAll("\\\\", "/");
+                                .toString().replaceAll("\\\\", "/");
                         str.append("/**\n").append(" * " + p + "\n")
                                 .append(" */\n");
                         str.append("  public static final File "

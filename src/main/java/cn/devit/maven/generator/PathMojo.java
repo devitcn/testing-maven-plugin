@@ -16,8 +16,11 @@
 package cn.devit.maven.generator;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,6 +37,7 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * Goal which touches a timestamp file.
+ * 
  * @author Alex Lei
  */
 @Mojo(name = "path", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, inheritByDefault = true)
@@ -72,6 +76,9 @@ public class PathMojo extends AbstractMojo {
     @Parameter(defaultValue = "${basedir}/src/test/resources")
     File resourceDirectory;
 
+    @Parameter(defaultValue = "${project.build.sourceEncoding}")
+    String encoding;
+
     /**
      * Packages for generated resources.
      * <p>
@@ -87,22 +94,6 @@ public class PathMojo extends AbstractMojo {
      */
     @Parameter(property = "project", required = true, readonly = true)
     protected MavenProject project;
-
-    // final FileFilter isDir = new FileFilter() {
-    // @Override
-    // public boolean accept(File arg0) {
-    // return arg0.isDirectory() && arg0.canRead()
-    // && !arg0.getName().startsWith(".");
-    // }
-    // };
-    //
-    // final FileFilter isFile = new FileFilter() {
-    // @Override
-    // public boolean accept(File arg0) {
-    // return arg0.isFile() && arg0.canRead()
-    // && !arg0.getName().startsWith(".");
-    // }
-    // };
 
     public void execute() throws MojoExecutionException {
         if (!resourceDirectory.exists()) {
@@ -120,14 +111,19 @@ public class PathMojo extends AbstractMojo {
         }
 
         File f = new File(packaged, "R.java");
-        this.getLog().info("Generating " + f.getPath());
-        FileWriter writer;
+        this.getLog().info("Generating " + f.getPath()+", encoding: "+encoding);
+        Writer writer;
         try {
-            writer = new FileWriter(f);
-            writer.write("package "+packageDir.replaceAll("/", ".")+";\n");
+            if (encoding != null) {
+                writer = new OutputStreamWriter(new FileOutputStream(f),
+                        encoding);
+            } else {
+                writer = new FileWriter(f);
+            }
+            writer.write("package " + packageDir.replaceAll("/", ".") + ";\n");
             writer.write(build.toString());
             writer.close();
-            
+
             project.addTestCompileSourceRoot(outputDirectory.getPath());
 
         } catch (IOException e) {
@@ -228,7 +224,8 @@ public class PathMojo extends AbstractMojo {
                         return FileVisitResult.CONTINUE;
                     }
                     if (attrs.isRegularFile()) {
-                        String p = root.relativize(file).toString();
+                        String p = root.relativize(file)
+                                .toString().replaceAll("\\\\", "/");
                         str.append("/**\n").append(" * " + p + "\n")
                                 .append(" */\n");
                         str.append("  public static final File "
@@ -236,7 +233,6 @@ public class PathMojo extends AbstractMojo {
                                 + " ").append(" = new File(\"" + p + "\");\n");
                         return FileVisitResult.CONTINUE;
                     }
-                    // System.out.println(file);
                     return super.visitFile(file, attrs);
                 }
             });

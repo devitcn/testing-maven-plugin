@@ -88,22 +88,6 @@ public class PathMojo extends AbstractMojo {
     @Parameter(property = "project", required = true, readonly = true)
     protected MavenProject project;
 
-    // final FileFilter isDir = new FileFilter() {
-    // @Override
-    // public boolean accept(File arg0) {
-    // return arg0.isDirectory() && arg0.canRead()
-    // && !arg0.getName().startsWith(".");
-    // }
-    // };
-    //
-    // final FileFilter isFile = new FileFilter() {
-    // @Override
-    // public boolean accept(File arg0) {
-    // return arg0.isFile() && arg0.canRead()
-    // && !arg0.getName().startsWith(".");
-    // }
-    // };
-
     public void execute() throws MojoExecutionException {
         if (!resourceDirectory.exists()) {
             this.getLog().info("No test resources found, skipped.");
@@ -228,7 +212,8 @@ public class PathMojo extends AbstractMojo {
                         return FileVisitResult.CONTINUE;
                     }
                     if (attrs.isRegularFile()) {
-                        String p = root.relativize(file).toString();
+                        String p = root.relativize(file)
+                            .toString().replaceAll("\\\\", "/");
                         str.append("/**\n").append(" * " + p + "\n")
                                 .append(" */\n");
                         str.append("  public static final File "
@@ -236,7 +221,6 @@ public class PathMojo extends AbstractMojo {
                                 + " ").append(" = new File(\"" + p + "\");\n");
                         return FileVisitResult.CONTINUE;
                     }
-                    // System.out.println(file);
                     return super.visitFile(file, attrs);
                 }
             });

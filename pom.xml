@@ -3,7 +3,7 @@
 
   <groupId>cn.devit.maven</groupId>
   <artifactId>testing-maven-plugin</artifactId>
-  <version>0.3.0-SNAPSHOT</version>
+  <version>0.3.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
@@ -24,7 +24,7 @@
   <scm>
     <connection>scm:git:https://github.com/devitcn/testing-maven-plugin</connection>
     <url>https://github.com/devitcn/testing-maven-plugin</url>
-    <tag>HEAD</tag>
+    <tag>testing-maven-plugin-0.3.0</tag>
   </scm>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

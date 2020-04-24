@@ -38,4 +38,12 @@ public class PathMojoTest {
     //unicode
     assertThat(str, (containsString("汉字")));
   }
+
+  @Test
+  public void pass_class_name() {
+    bean.className = "com.foo.Zen";
+    
+    assertThat(bean.packageName(),is("com.foo"));
+    assertThat(bean.simpleClassName(),is("Zen"));
+  }
 }

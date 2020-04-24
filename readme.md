@@ -13,7 +13,7 @@ There are two files resource in `src/test/resources`:
     test-data.txt
     features/1.txt
     
-Then will Generate com/boo/R.java at `target/generated-test-sources/path/`
+Then will Generate com/foo/R.java at `target/generated-test-sources/path/`
 
     package com.foo
     
@@ -56,4 +56,5 @@ Then will Generate com/boo/R.java at `target/generated-test-sources/path/`
 支持两个参数
 
 packageName :指定生成的类的包名，默认会取groupdId
-className：指定生成的类名，默认会取R，也可以指定类全名，这时packageName参数会忽略
+
+className：指定生成的类名，默认会取R，也可以指定类全名，这时会忽略packageName参数

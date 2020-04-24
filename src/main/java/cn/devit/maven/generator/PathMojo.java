@@ -149,7 +149,7 @@ public class PathMojo extends AbstractMojo {
       return "R";
     }
     if (this.className.contains(".")) {
-      String[] parts = this.className.split(".");
+      String[] parts = this.className.split("\\.");
       String filename = parts[parts.length - 1];
       mustBeValidJavaIdentifier(filename);
       return filename;

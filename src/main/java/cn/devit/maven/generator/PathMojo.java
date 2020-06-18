@@ -16,10 +16,12 @@
 package cn.devit.maven.generator;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -100,22 +102,18 @@ public class PathMojo extends AbstractMojo {
 
     File f = new File(packaged, simpleClassName() + ".java");
     this.getLog().info("Generating " + f.getPath() + ", encoding: " + encoding);
-    Writer writer;
-    try {
-      if (encoding != null) {
-        writer = new OutputStreamWriter(new FileOutputStream(f),
-            encoding);
-      } else {
-        writer = new FileWriter(f);
-      }
+    try (Writer writer = new OutputStreamWriter(new FileOutputStream(f),
+        encoding)) {
       writer.write("package " + packageName() + ";\n");
       writer.write(build.toString());
       writer.close();
 
       project.addTestCompileSourceRoot(outputDirectory.getPath());
-
+    } catch (UnsupportedEncodingException e) {
+      throw new MojoExecutionException(
+          "wrong encoding param (" + encoding + ") passed.", e);
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new MojoExecutionException("IO exception when write file.", e);
     }
 
   }
@@ -135,8 +133,8 @@ public class PathMojo extends AbstractMojo {
     if (startWithDigit.matcher(a).find()) {
       a = "_" + a;
     }
-    a = a.replaceAll("\\.", "_");
-    a = a.replaceAll("-", "_");
+    a = a.replace(".", "_");
+    a = a.replace("-", "_");
     return a;
   }
 
@@ -145,7 +143,7 @@ public class PathMojo extends AbstractMojo {
   }
 
   public String simpleClassName() {
-    if(this.className==null) {
+    if (this.className == null) {
       return "R";
     }
     if (this.className.contains(".")) {
